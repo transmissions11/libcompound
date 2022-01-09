@@ -1,6 +1,6 @@
 # libcompound
 
-Streamlined template for getting started with DappTools and Solmate.
+Call a cToken's `balanceOfUnderlying()` function without mutating state.
 
 ## Getting Started
 
