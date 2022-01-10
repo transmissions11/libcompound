@@ -1,6 +1,6 @@
 # libcompound
 
-Call a cToken's `balanceOfUnderlying()` function without mutating state.
+Get up to date cToken data without mutating state.
 
 ## Gas Benchmarks
 

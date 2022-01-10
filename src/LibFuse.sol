@@ -4,7 +4,7 @@ pragma solidity 0.8.10;
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
-/// @notice Call a cToken's balanceOfUnderlying() function without mutating state.
+/// @notice Get up to date cToken data without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
 library LibFuse {
     using FixedPointMathLib for uint256;
