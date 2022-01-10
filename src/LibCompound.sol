@@ -45,6 +45,8 @@ library LibCompound {
 abstract contract CToken is ERC20 {
     function underlying() external view virtual returns (ERC20);
 
+    function exchangeRateCurrent() external virtual returns (uint256);
+
     function totalBorrows() external view virtual returns (uint256);
 
     function totalReserves() external view virtual returns (uint256);
@@ -54,6 +56,8 @@ abstract contract CToken is ERC20 {
     function accrualBlockNumber() external view virtual returns (uint256);
 
     function reserveFactorMantissa() external view virtual returns (uint256);
+
+    function balanceOfUnderlying(address) external virtual returns (uint256);
 
     function interestRateModel() external view virtual returns (InterestRateModel);
 

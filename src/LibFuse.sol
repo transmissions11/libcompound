@@ -24,30 +24,33 @@ library LibFuse {
         uint256 adminFeesPrior = cToken.totalAdminFees();
         uint256 fuseFeesPrior = cToken.totalFuseFees();
 
-        uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(
-            totalCash,
-            borrowsPrior,
-            reservesPrior + adminFeesPrior + fuseFeesPrior
-        );
+        uint256 interestAccumulated; // Generated in new scope to avoid stack too deep.
+        {
+            uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(
+                totalCash,
+                borrowsPrior,
+                reservesPrior + adminFeesPrior + fuseFeesPrior
+            );
 
-        require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
+            require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
 
-        uint256 interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).fmul(
-            borrowsPrior,
-            1e18
-        );
+            interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).fmul(
+                borrowsPrior,
+                1e18
+            );
+        }
 
         uint256 totalReserves = cToken.reserveFactorMantissa().fmul(interestAccumulated, 1e18) + reservesPrior;
         uint256 totalAdminFees = cToken.adminFeeMantissa().fmul(interestAccumulated, 1e18) + adminFeesPrior;
         uint256 totalFuseFees = cToken.fuseFeeMantissa().fmul(interestAccumulated, 1e18) + fuseFeesPrior;
 
-        uint256 totalBorrows = interestAccumulated + borrowsPrior;
         uint256 totalSupply = cToken.totalSupply();
 
         return
             totalSupply == 0
                 ? cToken.initialExchangeRateMantissa()
-                : (totalCash + totalBorrows - (totalReserves + totalAdminFees + totalFuseFees)).fdiv(totalSupply, 1e18);
+                : (totalCash + (interestAccumulated + borrowsPrior) - (totalReserves + totalAdminFees + totalFuseFees))
+                    .fdiv(totalSupply, 1e18);
     }
 }
 
@@ -55,6 +58,8 @@ abstract contract CToken is ERC20 {
     function underlying() external view virtual returns (ERC20);
 
     function totalBorrows() external view virtual returns (uint256);
+
+    function exchangeRateCurrent() external virtual returns (uint256);
 
     function totalFuseFees() external view virtual returns (uint256);
 
@@ -71,6 +76,8 @@ abstract contract CToken is ERC20 {
     function accrualBlockNumber() external view virtual returns (uint256);
 
     function reserveFactorMantissa() external view virtual returns (uint256);
+
+    function balanceOfUnderlying(address) external virtual returns (uint256);
 
     function interestRateModel() external view virtual returns (InterestRateModel);
 
