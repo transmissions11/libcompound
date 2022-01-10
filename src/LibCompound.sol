@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import {ERC20} from "solmate/tokens/ERC20.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 import {CERC20} from "./interfaces/CERC20.sol";
@@ -42,34 +41,4 @@ library LibCompound {
                 ? cToken.initialExchangeRateMantissa()
                 : (totalCash + totalBorrows - totalReserves).fdiv(totalSupply, 1e18);
     }
-}
-
-abstract contract CToken is ERC20 {
-    function underlying() external view virtual returns (ERC20);
-
-    function totalBorrows() external view virtual returns (uint256);
-
-    function totalReserves() external view virtual returns (uint256);
-
-    function exchangeRateCurrent() external virtual returns (uint256);
-
-    function accrualBlockNumber() external view virtual returns (uint256);
-
-    function exchangeRateStored() external view virtual returns (uint256);
-
-    function reserveFactorMantissa() external view virtual returns (uint256);
-
-    function balanceOfUnderlying(address) external virtual returns (uint256);
-
-    function interestRateModel() external view virtual returns (InterestRateModel);
-
-    function initialExchangeRateMantissa() external view virtual returns (uint256);
-}
-
-interface InterestRateModel {
-    function getBorrowRate(
-        uint256 cash,
-        uint256 borrows,
-        uint256 reserves
-    ) external view returns (uint256);
 }
