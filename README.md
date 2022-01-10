@@ -10,8 +10,8 @@ Benchmarks taken from a recent run of the [test suite](src/test) on a mainnet fo
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
-| Direct Call | 76,474                  | 73,072                  |
-| LibCompound | 51,102                  | 39,220                  |
+| Direct Call | 70,638                  | 67,236                  |
+| LibCompound | 51,163                  | 39,281                  |
 
 ### LibFuse
 
@@ -19,8 +19,8 @@ Benchmarks taken from a recent run of the [test suite](src/test) on a mainnet fo
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
-| Direct Call | 67,113                  | 63,904                  |
-| LibFuse     | 66,890                  | 63,119                  |
+| Direct Call | 81,177                  | 77,968                  |
+| LibFuse     | 66,954                  | 63,183                  |
 
 ## Getting Started
 
