@@ -38,7 +38,7 @@ library LibCompound {
         return
             totalSupply == 0
                 ? cToken.initialExchangeRateMantissa()
-                : (totalCash + totalBorrows + totalReserves).fdiv(totalSupply, 1e18);
+                : (totalCash + totalBorrows - totalReserves).fdiv(totalSupply, 1e18);
     }
 }
 
