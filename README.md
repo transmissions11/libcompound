@@ -4,9 +4,9 @@ Get up to date cToken data without mutating state.
 
 ## Gas Benchmarks
 
-### LibCompound
-
 Benchmarks taken from a recent run of the [test suite](src/test) on a mainnet fork.
+
+### LibCompound
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
@@ -14,8 +14,6 @@ Benchmarks taken from a recent run of the [test suite](src/test) on a mainnet fo
 | LibCompound | 51,163                  | 39,281                  |
 
 ### LibFuse
-
-Benchmarks taken from a recent run of the [test suite](src/test) on a mainnet fork.
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
