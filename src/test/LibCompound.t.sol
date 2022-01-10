@@ -8,7 +8,7 @@ import {CERC20} from "../interfaces/CERC20.sol";
 import {LibCompound} from "../LibCompound.sol";
 
 contract LibCompoundTest is DSTestPlus {
-    CToken cDAI = CToken(address(0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643));
+    CERC20 cDAI = CERC20(address(0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643));
 
     address cDAIHolder = 0xA2B47E3D5c44877cca798226B7B8118F9BFb7A56;
 
