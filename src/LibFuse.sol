@@ -59,11 +59,11 @@ abstract contract CToken is ERC20 {
 
     function totalBorrows() external view virtual returns (uint256);
 
-    function exchangeRateCurrent() external virtual returns (uint256);
-
     function totalFuseFees() external view virtual returns (uint256);
 
     function totalReserves() external view virtual returns (uint256);
+
+    function exchangeRateCurrent() external virtual returns (uint256);
 
     function totalAdminFees() external view virtual returns (uint256);
 
