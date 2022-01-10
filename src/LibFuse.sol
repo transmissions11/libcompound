@@ -4,16 +4,18 @@ pragma solidity 0.8.10;
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
+import {CERC20} from "./interfaces/CERC20.sol";
+
 /// @notice Get up to date cToken data without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
 library LibFuse {
     using FixedPointMathLib for uint256;
 
-    function viewUnderlyingBalanceOf(CToken cToken, address user) internal view returns (uint256) {
+    function viewUnderlyingBalanceOf(CERC20 cToken, address user) internal view returns (uint256) {
         return cToken.balanceOf(user).fmul(viewExchangeRate(cToken), 1e18);
     }
 
-    function viewExchangeRate(CToken cToken) internal view returns (uint256) {
+    function viewExchangeRate(CERC20 cToken) internal view returns (uint256) {
         uint256 accrualBlockNumberPrior = cToken.accrualBlockNumber();
 
         if (accrualBlockNumberPrior == block.number) return cToken.exchangeRateStored();
@@ -52,42 +54,4 @@ library LibFuse {
                 : (totalCash + (interestAccumulated + borrowsPrior) - (totalReserves + totalAdminFees + totalFuseFees))
                     .fdiv(totalSupply, 1e18);
     }
-}
-
-abstract contract CToken is ERC20 {
-    function underlying() external view virtual returns (ERC20);
-
-    function totalBorrows() external view virtual returns (uint256);
-
-    function totalFuseFees() external view virtual returns (uint256);
-
-    function totalReserves() external view virtual returns (uint256);
-
-    function exchangeRateCurrent() external virtual returns (uint256);
-
-    function totalAdminFees() external view virtual returns (uint256);
-
-    function fuseFeeMantissa() external view virtual returns (uint256);
-
-    function adminFeeMantissa() external view virtual returns (uint256);
-
-    function exchangeRateStored() external view virtual returns (uint256);
-
-    function accrualBlockNumber() external view virtual returns (uint256);
-
-    function reserveFactorMantissa() external view virtual returns (uint256);
-
-    function balanceOfUnderlying(address) external virtual returns (uint256);
-
-    function interestRateModel() external view virtual returns (InterestRateModel);
-
-    function initialExchangeRateMantissa() external view virtual returns (uint256);
-}
-
-interface InterestRateModel {
-    function getBorrowRate(
-        uint256 cash,
-        uint256 borrows,
-        uint256 reserves
-    ) external view returns (uint256);
 }
