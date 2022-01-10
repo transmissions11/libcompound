@@ -3,7 +3,9 @@ pragma solidity 0.8.10;
 
 import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
 
-import {LibCompound, CToken} from "../LibCompound.sol";
+import {CERC20} from "../interfaces/CERC20.sol";
+
+import {LibCompound} from "../LibCompound.sol";
 
 contract LibCompoundTest is DSTestPlus {
     CToken cDAI = CToken(address(0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643));
