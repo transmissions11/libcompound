@@ -14,11 +14,11 @@ contract LibCompoundTest is DSTestPlus {
                            CORRECTNESS TESTS
     //////////////////////////////////////////////////////////////*/
 
-    function testCompoundExchangeRate() public {
+    function testCompoundExchangeRateCorrectness() public {
         assertEq(cDAI.exchangeRateCurrent(), LibCompound.viewExchangeRate(cDAI));
     }
 
-    function testCompoundBalanceOfUnderlying() public {
+    function testCompoundBalanceOfUnderlyingCorrectness() public {
         assertEq(cDAI.balanceOfUnderlying(cDAIHolder), LibCompound.viewUnderlyingBalanceOf(cDAI, cDAIHolder));
     }
 

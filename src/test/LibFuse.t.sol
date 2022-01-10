@@ -14,11 +14,11 @@ contract LibFuseTest is DSTestPlus {
                            CORRECTNESS TESTS
     //////////////////////////////////////////////////////////////*/
 
-    function testFuseExchangeRate() public {
+    function testFuseExchangeRateCorrectness() public {
         assertEq(f6DAI.exchangeRateCurrent(), LibFuse.viewExchangeRate(f6DAI));
     }
 
-    function testFuseBalanceOfUnderlying() public {
+    function testFuseBalanceOfUnderlyingCorrectness() public {
         assertEq(f6DAI.balanceOfUnderlying(f6DAIHolder), LibFuse.viewUnderlyingBalanceOf(f6DAI, f6DAIHolder));
     }
 
