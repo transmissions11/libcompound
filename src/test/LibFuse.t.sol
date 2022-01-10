@@ -3,6 +3,6 @@ pragma solidity 0.8.10;
 
 import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
 
-import {LibCompound} from "../LibCompound.sol";
+import {LibFuse} from "../LibFuse.sol";
 
-contract LibCompoundTest is DSTestPlus {}
+contract LibFuseTest is DSTestPlus {}

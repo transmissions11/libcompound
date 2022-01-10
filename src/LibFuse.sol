@@ -6,7 +6,7 @@ import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 /// @notice Call a cToken's balanceOfUnderlying() function without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
-library LibCompound {
+library LibFuse {
     using FixedPointMathLib for uint256;
 
     function viewUnderlyingBalanceOf(CToken cToken, address user) internal view returns (uint256) {
@@ -21,8 +21,14 @@ library LibCompound {
         uint256 totalCash = cToken.underlying().balanceOf(address(cToken));
         uint256 borrowsPrior = cToken.totalBorrows();
         uint256 reservesPrior = cToken.totalReserves();
+        uint256 adminFeesPrior = cToken.totalAdminFees();
+        uint256 fuseFeesPrior = cToken.totalFuseFees();
 
-        uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
+        uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(
+            totalCash,
+            borrowsPrior,
+            reservesPrior + adminFeesPrior + fuseFeesPrior
+        );
 
         require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
 
@@ -32,13 +38,16 @@ library LibCompound {
         );
 
         uint256 totalReserves = cToken.reserveFactorMantissa().fmul(interestAccumulated, 1e18) + reservesPrior;
+        uint256 totalAdminFees = cToken.adminFeeMantissa().fmul(interestAccumulated, 1e18) + adminFeesPrior;
+        uint256 totalFuseFees = cToken.fuseFeeMantissa().fmul(interestAccumulated, 1e18) + fuseFeesPrior;
+
         uint256 totalBorrows = interestAccumulated + borrowsPrior;
         uint256 totalSupply = cToken.totalSupply();
 
         return
             totalSupply == 0
                 ? cToken.initialExchangeRateMantissa()
-                : (totalCash + totalBorrows + totalReserves).fdiv(totalSupply, 1e18);
+                : (totalCash + totalBorrows - (totalReserves + totalAdminFees + totalFuseFees)).fdiv(totalSupply, 1e18);
     }
 }
 
@@ -47,7 +56,15 @@ abstract contract CToken is ERC20 {
 
     function totalBorrows() external view virtual returns (uint256);
 
+    function totalFuseFees() external view virtual returns (uint256);
+
     function totalReserves() external view virtual returns (uint256);
+
+    function totalAdminFees() external view virtual returns (uint256);
+
+    function fuseFeeMantissa() external view virtual returns (uint256);
+
+    function adminFeeMantissa() external view virtual returns (uint256);
 
     function exchangeRateStored() external view virtual returns (uint256);
 
