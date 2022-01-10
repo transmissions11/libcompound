@@ -26,7 +26,7 @@ contract LibFuseTest is DSTestPlus {
                            GAS SNAPSHOT TESTS
     //////////////////////////////////////////////////////////////*/
 
-    function testFuseBalanceOfUnderlyingView() public view {
+    function testFuseBalanceOfUnderlyingViewGas() public view {
         LibFuse.viewUnderlyingBalanceOf(f6DAI, f6DAIHolder);
     }
 

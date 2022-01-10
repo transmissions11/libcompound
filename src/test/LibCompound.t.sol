@@ -26,11 +26,11 @@ contract LibCompoundTest is DSTestPlus {
                            GAS SNAPSHOT TESTS
     //////////////////////////////////////////////////////////////*/
 
-    function testCompoundBalanceOfUnderlyingView() public view {
+    function testCompoundBalanceOfUnderlyingViewGas() public view {
         LibCompound.viewUnderlyingBalanceOf(cDAI, cDAIHolder);
     }
 
-    function testCompoundBalanceOfUnderlyingMutating() public {
+    function testCompoundBalanceOfUnderlyingMutatingGas() public {
         cDAI.balanceOfUnderlying(cDAIHolder);
     }
 
