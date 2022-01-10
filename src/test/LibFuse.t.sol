@@ -10,11 +10,35 @@ contract LibFuseTest is DSTestPlus {
 
     address f6DAIHolder = 0x81649be6A4f00E3098DA5ff4b166122de4f05cC1;
 
-    function testExchangeRate() public {
+    /*///////////////////////////////////////////////////////////////
+                           CORRECTNESS TESTS
+    //////////////////////////////////////////////////////////////*/
+
+    function testFuseExchangeRate() public {
         assertEq(f6DAI.exchangeRateCurrent(), LibFuse.viewExchangeRate(f6DAI));
     }
 
-    function testBalanceOfUnderlying() public {
+    function testFuseBalanceOfUnderlying() public {
         assertEq(f6DAI.balanceOfUnderlying(f6DAIHolder), LibFuse.viewUnderlyingBalanceOf(f6DAI, f6DAIHolder));
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                           GAS SNAPSHOT TESTS
+    //////////////////////////////////////////////////////////////*/
+
+    function testFuseBalanceOfUnderlyingView() public view {
+        LibFuse.viewUnderlyingBalanceOf(f6DAI, f6DAIHolder);
+    }
+
+    function testFuseBalanceOfUnderlyingMutatingGas() public {
+        f6DAI.balanceOfUnderlying(f6DAIHolder);
+    }
+
+    function testFuseExchangeRateViewGas() public view {
+        LibFuse.viewExchangeRate(f6DAI);
+    }
+
+    function testFuseExchangeRateMutatingGas() public {
+        f6DAI.exchangeRateCurrent();
     }
 }

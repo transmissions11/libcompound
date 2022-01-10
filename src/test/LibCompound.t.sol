@@ -10,11 +10,35 @@ contract LibCompoundTest is DSTestPlus {
 
     address cDAIHolder = 0xA2B47E3D5c44877cca798226B7B8118F9BFb7A56;
 
-    function testExchangeRate() public {
+    /*///////////////////////////////////////////////////////////////
+                           CORRECTNESS TESTS
+    //////////////////////////////////////////////////////////////*/
+
+    function testCompoundExchangeRate() public {
         assertEq(cDAI.exchangeRateCurrent(), LibCompound.viewExchangeRate(cDAI));
     }
 
-    function testBalanceOfUnderlying() public {
+    function testCompoundBalanceOfUnderlying() public {
         assertEq(cDAI.balanceOfUnderlying(cDAIHolder), LibCompound.viewUnderlyingBalanceOf(cDAI, cDAIHolder));
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                           GAS SNAPSHOT TESTS
+    //////////////////////////////////////////////////////////////*/
+
+    function testCompoundBalanceOfUnderlyingView() public view {
+        LibCompound.viewUnderlyingBalanceOf(cDAI, cDAIHolder);
+    }
+
+    function testCompoundBalanceOfUnderlyingMutating() public {
+        cDAI.balanceOfUnderlying(cDAIHolder);
+    }
+
+    function testCompoundExchangeRateViewGas() public view {
+        LibCompound.viewExchangeRate(cDAI);
+    }
+
+    function testCompoundExchangeRateMutatingGas() public {
+        cDAI.exchangeRateCurrent();
     }
 }
