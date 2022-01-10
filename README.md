@@ -6,7 +6,7 @@ Call a cToken's `balanceOfUnderlying()` function without mutating state.
 
 ### LibCompound
 
-#### balanceOfUnderlying
+Benchmarks taken from a recent run of the [test suite](src/tests) on a mainnet fork.
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
@@ -14,6 +14,8 @@ Call a cToken's `balanceOfUnderlying()` function without mutating state.
 | LibCompound | 51,102                  | 39,220                  |
 
 ### LibFuse
+
+Benchmarks taken from a recent run of the [test suite](src/tests) on a mainnet fork.
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
