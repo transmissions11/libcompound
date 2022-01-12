@@ -1,6 +1,6 @@
 # libcompound
 
-Get up to date cToken data without mutating state.
+Get up to date cToken data using 20% less gas without mutating state.
 
 ## Gas Benchmarks
 
