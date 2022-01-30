@@ -11,7 +11,7 @@ library LibFuse {
     using FixedPointMathLib for uint256;
 
     function viewUnderlyingBalanceOf(CERC20 cToken, address user) internal view returns (uint256) {
-        return cToken.balanceOf(user).fmul(viewExchangeRate(cToken), 1e18);
+        return cToken.balanceOf(user).mulWadDown(viewExchangeRate(cToken));
     }
 
     function viewExchangeRate(CERC20 cToken) internal view returns (uint256) {
@@ -33,17 +33,16 @@ library LibFuse {
                 reservesPrior + adminFeesPrior + fuseFeesPrior
             );
 
-            require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
+            require(borrowRateMantissa <= cToken.borrowRateMaxMantissa(), "RATE_TOO_HIGH");
 
-            interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).fmul(
-                borrowsPrior,
-                1e18
+            interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
+                borrowsPrior
             );
         }
 
-        uint256 totalReserves = cToken.reserveFactorMantissa().fmul(interestAccumulated, 1e18) + reservesPrior;
-        uint256 totalAdminFees = cToken.adminFeeMantissa().fmul(interestAccumulated, 1e18) + adminFeesPrior;
-        uint256 totalFuseFees = cToken.fuseFeeMantissa().fmul(interestAccumulated, 1e18) + fuseFeesPrior;
+        uint256 totalReserves = cToken.reserveFactorMantissa().mulWadDown(interestAccumulated) + reservesPrior;
+        uint256 totalAdminFees = cToken.adminFeeMantissa().mulWadDown(interestAccumulated) + adminFeesPrior;
+        uint256 totalFuseFees = cToken.fuseFeeMantissa().mulWadDown(interestAccumulated) + fuseFeesPrior;
 
         uint256 totalSupply = cToken.totalSupply();
 
@@ -51,6 +50,6 @@ library LibFuse {
             totalSupply == 0
                 ? cToken.initialExchangeRateMantissa()
                 : (totalCash + (interestAccumulated + borrowsPrior) - (totalReserves + totalAdminFees + totalFuseFees))
-                    .fdiv(totalSupply, 1e18);
+                    .divWadDown(totalSupply);
     }
 }

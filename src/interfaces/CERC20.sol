@@ -36,6 +36,8 @@ abstract contract CERC20 is ERC20 {
 
     function balanceOfUnderlying(address) external virtual returns (uint256);
 
+    function borrowRateMaxMantissa() external view virtual returns (uint256);
+
     function reserveFactorMantissa() external view virtual returns (uint256);
 
     function borrowBalanceCurrent(address) external virtual returns (uint256);
