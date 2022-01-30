@@ -33,7 +33,7 @@ library LibFuse {
                 reservesPrior + adminFeesPrior + fuseFeesPrior
             );
 
-            require(borrowRateMantissa <= cToken.borrowRateMaxMantissa(), "RATE_TOO_HIGH");
+            require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
 
             interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
                 borrowsPrior

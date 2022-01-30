@@ -25,7 +25,7 @@ library LibCompound {
 
         uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
 
-        require(borrowRateMantissa <= cToken.borrowRateMaxMantissa(), "RATE_TOO_HIGH");
+        require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
 
         uint256 interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
             borrowsPrior
