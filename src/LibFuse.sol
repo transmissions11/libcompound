@@ -33,6 +33,7 @@ library LibFuse {
                 reservesPrior + adminFeesPrior + fuseFeesPrior
             );
 
+            // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
             require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH");
 
             interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
