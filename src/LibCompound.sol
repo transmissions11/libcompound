@@ -23,7 +23,7 @@ library LibCompound {
         uint256 borrowsPrior = cToken.totalBorrows();
         uint256 reservesPrior = cToken.totalReserves();
 
-        uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
+        uint256 borrowRateMantissa = cToken.borrowRatePerBlock();
 
         require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH"); // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
 
