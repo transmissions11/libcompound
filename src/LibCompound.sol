@@ -11,6 +11,8 @@ import {CERC20a} from "./interfaces/CERC20a.sol";
 library LibCompound {
     using FixedPointMathLib for uint256;
 
+    error RATE_TOO_HIGH;
+
     function viewUnderlyingBalanceOf(CERC20 cToken, address user) internal view returns (uint256) {
         return cToken.balanceOf(user).mulWadDown(viewExchangeRate(cToken));
     }
@@ -26,11 +28,11 @@ library LibCompound {
 
         uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
 
-        if (borrowRateMantissa <= 100) {
+        if (borrowRateMantissa < 100) {
             (, borrowRateMantissa = CERC20a(address(cToken)).interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);)
         }
 
-        require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH"); // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
+        if (borrowRateMantissa > 0.0005e16) {revert RATE_TOO_HIGH} // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
 
         uint256 interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
             borrowsPrior
