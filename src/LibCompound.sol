@@ -4,11 +4,14 @@ pragma solidity 0.8.10;
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 import {CERC20} from "./interfaces/CERC20.sol";
+import {CERC20a} from "./interfaces/CERC20a.sol"; 
 
 /// @notice Get up to date cToken data without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
 library LibCompound {
     using FixedPointMathLib for uint256;
+
+    error RATE_TOO_HIGH();
 
     function viewUnderlyingBalanceOf(CERC20 cToken, address user) internal view returns (uint256) {
         return cToken.balanceOf(user).mulWadDown(viewExchangeRate(cToken));
@@ -25,7 +28,11 @@ library LibCompound {
 
         uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
 
-        require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH"); // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
+        if (borrowRateMantissa < 100) {
+            (, borrowRateMantissa) = CERC20a(address(cToken)).interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior); 
+        }
+
+        if (borrowRateMantissa > 0.0005e16) { revert RATE_TOO_HIGH(); } // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
 
         uint256 interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
             borrowsPrior
