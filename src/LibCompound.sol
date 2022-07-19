@@ -29,10 +29,10 @@ library LibCompound {
         uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
 
         if (borrowRateMantissa < 100) {
-            (, borrowRateMantissa = CERC20a(address(cToken)).interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);)
+            (, borrowRateMantissa) = CERC20a(address(cToken)).interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior); 
         }
 
-        if (borrowRateMantissa > 0.0005e16) {revert RATE_TOO_HIGH} // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
+        if (borrowRateMantissa > 0.0005e16) { revert RATE_TOO_HIGH(); } // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
 
         uint256 interestAccumulated = (borrowRateMantissa * (block.number - accrualBlockNumberPrior)).mulWadDown(
             borrowsPrior
