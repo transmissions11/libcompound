@@ -4,6 +4,7 @@ pragma solidity 0.8.10;
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 import {CERC20} from "./interfaces/CERC20.sol";
+import {CERC20a} from "./interfaces/CERC20a.sol";
 
 /// @notice Get up to date cToken data without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
@@ -24,6 +25,10 @@ library LibCompound {
         uint256 reservesPrior = cToken.totalReserves();
 
         uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
+
+        if (borrowRateMantissa <= 100) {
+            (, borrowRateMantissa = CERC20a(address(cToken)).interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);)
+        }
 
         require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH"); // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
 
