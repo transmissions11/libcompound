@@ -4,14 +4,14 @@ pragma solidity 0.8.10;
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 import {CERC20} from "./interfaces/CERC20.sol";
-import {CERC20a} from "./interfaces/CERC20a.sol";
+import {CERC20a} from "./interfaces/CERC20a.sol"; 
 
 /// @notice Get up to date cToken data without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
 library LibCompound {
     using FixedPointMathLib for uint256;
 
-    error RATE_TOO_HIGH;
+    error RATE_TOO_HIGH();
 
     function viewUnderlyingBalanceOf(CERC20 cToken, address user) internal view returns (uint256) {
         return cToken.balanceOf(user).mulWadDown(viewExchangeRate(cToken));
