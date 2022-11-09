@@ -8,6 +8,8 @@ import {InterestRateModel} from "./InterestRateModel.sol";
 abstract contract CERC20 is ERC20 {
     function mint(uint256) external virtual returns (uint256);
 
+    function getCash() external view virtual returns (uint256);
+
     function borrow(uint256) external virtual returns (uint256);
 
     function underlying() external view virtual returns (ERC20);

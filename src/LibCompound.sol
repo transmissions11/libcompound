@@ -19,7 +19,7 @@ library LibCompound {
 
         if (accrualBlockNumberPrior == block.number) return cToken.exchangeRateStored();
 
-        uint256 totalCash = cToken.underlying().balanceOf(address(cToken));
+        uint256 totalCash = cToken.getCash();
         uint256 borrowsPrior = cToken.totalBorrows();
         uint256 reservesPrior = cToken.totalReserves();
 
