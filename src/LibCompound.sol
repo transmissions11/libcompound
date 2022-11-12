@@ -3,27 +3,27 @@ pragma solidity 0.8.10;
 
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
-import {CERC20} from "./interfaces/CERC20.sol";
+import {CToken} from "./interfaces/CToken.sol";
 
 /// @notice Get up to date cToken data without mutating state.
 /// @author Transmissions11 (https://github.com/transmissions11/libcompound)
 library LibCompound {
     using FixedPointMathLib for uint256;
 
-    function viewUnderlyingBalanceOf(CERC20 cToken, address user) internal view returns (uint256) {
+    function viewUnderlyingBalanceOf(CToken cToken, address user) internal view returns (uint256) {
         return cToken.balanceOf(user).mulWadDown(viewExchangeRate(cToken));
     }
 
-    function viewExchangeRate(CERC20 cToken) internal view returns (uint256) {
+    function viewExchangeRate(CToken cToken) internal view returns (uint256) {
         uint256 accrualBlockNumberPrior = cToken.accrualBlockNumber();
 
         if (accrualBlockNumberPrior == block.number) return cToken.exchangeRateStored();
 
-        uint256 totalCash = cToken.underlying().balanceOf(address(cToken));
+        uint256 totalCash = cToken.getCash();
         uint256 borrowsPrior = cToken.totalBorrows();
         uint256 reservesPrior = cToken.totalReserves();
 
-        uint256 borrowRateMantissa = cToken.interestRateModel().getBorrowRate(totalCash, borrowsPrior, reservesPrior);
+        uint256 borrowRateMantissa = cToken.borrowRatePerBlock();
 
         require(borrowRateMantissa <= 0.0005e16, "RATE_TOO_HIGH"); // Same as borrowRateMaxMantissa in CTokenInterfaces.sol
 
@@ -35,9 +35,7 @@ library LibCompound {
         uint256 totalBorrows = interestAccumulated + borrowsPrior;
         uint256 totalSupply = cToken.totalSupply();
 
-        return
-            totalSupply == 0
-                ? cToken.initialExchangeRateMantissa()
-                : (totalCash + totalBorrows - totalReserves).divWadDown(totalSupply);
+        // Reverts if totalSupply == 0
+        return (totalCash + totalBorrows - totalReserves).divWadDown(totalSupply);
     }
 }
