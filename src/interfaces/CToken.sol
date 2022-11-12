@@ -5,12 +5,8 @@ import {ERC20} from "solmate/tokens/ERC20.sol";
 
 import {InterestRateModel} from "./InterestRateModel.sol";
 
-abstract contract CERC20 is ERC20 {
-    function mint(uint256) external virtual returns (uint256);
-
+abstract contract CToken is ERC20 {
     function getCash() external view virtual returns (uint256);
-
-    function borrow(uint256) external virtual returns (uint256);
 
     function underlying() external view virtual returns (ERC20);
 
@@ -36,8 +32,6 @@ abstract contract CERC20 is ERC20 {
 
     function borrowRatePerBlock() external view virtual returns (uint256);
 
-    function redeemUnderlying(uint256) external virtual returns (uint256);
-
     function balanceOfUnderlying(address) external virtual returns (uint256);
 
     function reserveFactorMantissa() external view virtual returns (uint256);
@@ -45,8 +39,4 @@ abstract contract CERC20 is ERC20 {
     function borrowBalanceCurrent(address) external virtual returns (uint256);
 
     function interestRateModel() external view virtual returns (InterestRateModel);
-
-    function initialExchangeRateMantissa() external view virtual returns (uint256);
-
-    function repayBorrowBehalf(address, uint256) external virtual returns (uint256);
 }
