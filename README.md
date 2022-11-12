@@ -10,15 +10,15 @@ Benchmarks taken from a recent run of the [test suite](src/test) on a mainnet fo
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
-| Direct Call | 70,638                  | 67,236                  |
-| LibCompound | 51,163                  | 39,281                  |
+| Direct Call | 69,254                  | 64,170                  |
+| LibCompound | 64,140                  | 54,664                  |
 
 ### LibFuse
 
 | Method      | balanceOfUnderlying Gas | exchangeRateCurrent Gas |
 | ----------- | ----------------------- | ----------------------- |
-| Direct Call | 81,177                  | 77,968                  |
-| LibFuse     | 66,954                  | 63,183                  |
+| Direct Call | 100,738                 | 95,485                  |
+| LibFuse     | 71,419                  | 65,582                  |
 
 ## Getting Started
 
